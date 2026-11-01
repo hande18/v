@@ -1,0 +1,27 @@
+signal TEMP : STD_LOGIC_VECTOR(3 downto 0) := "0000";
+begin
+process(reset, clk)
+begin
+if reset = "1" then
+TEMP <= "0000";
+elsif rising_edge(clk(0)) then
+case sel is
+-- 11: Parallel load
+when "11" =>
+TEMP <= datain;
+-- 00: Hold previous data
+when "00" =>
+null;
+-- 01: Left shift
+when "01" =>
+TEMP <= TEMP(2 downto 0) & sl_in(0);
+-- 10: Right shift
+when "10" =>
+TEMP <= sr_in(0) & TEMP(3 downto 1);
+when others =>
+null;
+end case;
+end if;
+end process;
+dataout <= TEMP;
+end Behavioral;
